@@ -1,6 +1,6 @@
 # Amiga port intake: Meritous
 
-- Port Atlas: [g-meritous](https://www.amigachrome.com/ports/#g-meritous)
+- Port Atlas: [g-meritous](https://www.amicradle.com/ports/#g-meritous)
 - Priority: `P2`
 - Atlas decision: `evaluate`
 - Upstream source: `https://github.com/bart9h/meritous`
