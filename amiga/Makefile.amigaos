@@ -1,0 +1,54 @@
+# Meritous for AmigaOS 3.x / AmiCradle, 68040 + FPU, on acsdl12.
+#
+#   make -f amiga/Makefile.amigaos STOVE=/path/to/os32-gcc16/prefix \
+#        NDK=/path/to/gfopensdk/OpenNDK/Include_H \
+#        ACSDL=/path/to/amicradle-guest/gameports/acsdl12
+#
+# STOVE is GFOpenAmigaGCC 16.2.0-open4 or later. ACSDL is acsdl12, built with
+# its own Makefile.amigaos (it holds zlib's inflate; the saved games need
+# zlib's gz files too, built in here from ZLIB).
+# Output: build/amigaos/Meritous/ with the program and dat/ beside it.
+
+STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16/prefix
+NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
+ACSDL   ?= ../amicradle-guest/gameports/acsdl12
+ACGAME  ?= $(ACSDL)/../acgame
+ZLIB    ?= ../zlib-1.3.1
+CC      = $(STOVE)/bin/m68k-amigaos-gcc
+CPU     ?= -m68040 -m68881
+OPT     ?= -O2 -fomit-frame-pointer
+CFLAGS  = -noixemul -std=gnu99 $(OPT) $(CPU) -fcommon -Wall -Wno-unused-variable \
+          -Wno-unused-but-set-variable -Wno-unused-result \
+          -I$(ACSDL)/include/SDL -I$(ACSDL)/include -I$(ACGAME)/include -I$(NDK) -I$(ZLIB)
+ZFLAGS  = -noixemul -O2 $(CPU) -I$(ZLIB) -include unistd.h
+LDFLAGS = -noixemul $(CPU)
+BUILD   = build/amigaos
+OUT     = $(BUILD)/Meritous
+
+SRC     = $(wildcard src/*.c)
+OBJS    = $(SRC:src/%.c=$(BUILD)/%.o) $(BUILD)/stack.o
+GZ      = gzlib gzread gzwrite gzclose deflate trees
+GZOBJS  = $(GZ:%=$(BUILD)/z_%.o)
+
+all: $(OUT)/meritous
+
+$(OUT)/meritous: $(OBJS) $(GZOBJS) | $(OUT)
+	$(CC) $(LDFLAGS) -o $@ $^ $(ACSDL)/build/amigaos/libacsdl12.a -lm
+	cp -r dat $(OUT)/
+
+$(BUILD)/%.o: src/%.c | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD)/stack.o: amiga/stack.c | $(BUILD)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(BUILD)/z_%.o: $(ZLIB)/%.c | $(BUILD)
+	$(CC) $(ZFLAGS) -c -o $@ $<
+
+$(BUILD) $(OUT):
+	mkdir -p $@
+
+clean:
+	rm -rf $(BUILD)
+
+.PHONY: all clean

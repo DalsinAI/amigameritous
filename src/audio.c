@@ -52,7 +52,11 @@ Mix_Chunk *c_sample[16] = {NULL};
 
 void InitAudio()
 {
+#ifdef __amigaos__
+	Mix_OpenAudio(22050, AUDIO_S16, 2, 2048);
+#else
 	Mix_OpenAudio(44100, AUDIO_S16, 2, 4096);
+#endif
 	Mix_VolumeMusic(112);
 	Mix_AllocateChannels(16);
 }
