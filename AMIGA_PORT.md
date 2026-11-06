@@ -20,19 +20,37 @@ No build, runtime, playability or release claim is made by this source-intake co
 
 review; Confirm source/data licences before release.
 
+## Installing
+
+Unpack the archive anywhere (on AmiCradle: `SYS:Utilities/OpenCompress x
+meritous-...lha RAM:`), then double-click `Install-Meritous` beside the
+`Meritous` drawer: it asks where to put the game (`Work:Games` by default)
+and makes or updates the drawer; the saved game (`SaveFile.sav`) is not in
+the archive, so an update leaves it as it is. The drawer's `Libs` holds
+the acgame.library the game was built against, and the game opens that
+copy first.
+
 ## Build (AmigaOS 3.x, 68040 + FPU, on acsdl12)
 
     make -f amiga/Makefile.amigaos \
         STOVE=/path/to/openamigagcc-16.2.0-open4-x86_64-linux \
         NDK=/path/to/gfopensdk/OpenNDK/Include_H \
         ACSDL=/path/to/amicradle-guest/gameports/acsdl12 \
+        ACSDLLIB=/path/to/acsdl12/build \
+        ACGAME=/path/to/acgame ACGAMELIB=/path/to/acgame/build-amiga \
         ZLIB=/path/to/zlib-1.3.1
 
 acsdl12 (amicradle-guest `gameports/acsdl12`, built with its own
-`Makefile.amigaos`) is SDL 1.2, SDL_image and SDL_mixer on ACGame and AHI. zlib's
-gz files are built in here for the saved games. This gives
-`build/amigaos/Meritous/` with the program and `dat/` beside it; run it from
-that drawer. 640x480 in 256 colours, RTG or AGA (`ENV:ACGame/Display`).
+`Makefile.amigaos`, without its own copy of ACGame: `ACG=`) is SDL 1.2,
+SDL_image and SDL_mixer on AHI; the game links acgame.library's stubs
+(`libacgame.a`). zlib's gz files are built in here for the saved games.
+This gives `build/amigaos/Meritous/` with the program, `dat/`, this ReadMe,
+`COPYING` and their GlowIcons (made from the game's own `dat/i/icon.png`
+with AmiCradle's `port_icons.py` from `amiga/icons/icons.json`), and
+`Meritous.info` beside the drawer; run it from that drawer.
+`package/build-amiga.sh` (STOVE and OUT set) makes the release archive
+with its installer, fetching and building acgame, acsdl12 and zlib at
+pinned commits. 640x480 in 256 colours, RTG or AGA (`ENV:ACGame/Display`).
 
 Changes for the Amiga: a 2 MB stack (`amiga/stack.c`: `main()` keeps 1.2 MB of
 locals) and 22050 Hz sound. Only the `.MOD` tunes play; the `.XM` and `.S3M`

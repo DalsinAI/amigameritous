@@ -2,17 +2,25 @@
 #
 #   make -f amiga/Makefile.amigaos STOVE=/path/to/os32-gcc16/prefix \
 #        NDK=/path/to/gfopensdk/OpenNDK/Include_H \
-#        ACSDL=/path/to/amicradle-guest/gameports/acsdl12
+#        ACSDL=/path/to/amicradle-guest/gameports/acsdl12 \
+#        ACSDLLIB=/path/to/acsdl12/build ACGAME=/path/to/acgame \
+#        ACGAMELIB=/path/to/acgame/build-amiga
 #
 # STOVE is GFOpenAmigaGCC 16.2.0-open4 or later. ACSDL is acsdl12, built with
 # its own Makefile.amigaos (it holds zlib's inflate; the saved games need
 # zlib's gz files too, built in here from ZLIB).
-# Output: build/amigaos/Meritous/ with the program and dat/ beside it.
+# acsdl12 is built with ACG= into ACSDLLIB, without its own copy of ACGame:
+# the game gets ACGame from acgame.library, through ACGAMELIB's libacgame.a
+# (DalsinAI/acgame's stubs). package/acgame-deps.sh builds both.
+# Output: build/amigaos/Meritous/ with the program, dat/, ReadMe, COPYING and
+# their icons, and Meritous.info beside the drawer.
 
 STOVE   ?= $(HOME)/AmiCradle/stoves/os32-gcc16/prefix
 NDK     ?= $(HOME)/AmiCradle/gfopensdk/OpenNDK/Include_H
 ACSDL   ?= ../amicradle-guest/gameports/acsdl12
+ACSDLLIB ?= $(ACSDL)/build/amigaos
 ACGAME  ?= $(ACSDL)/../acgame
+ACGAMELIB ?= $(ACGAME)/build-amiga
 ZLIB    ?= ../zlib-1.3.1
 CC      = $(STOVE)/bin/m68k-amigaos-gcc
 CPU     ?= -m68040 -m68881
@@ -33,8 +41,12 @@ GZOBJS  = $(GZ:%=$(BUILD)/z_%.o)
 all: $(OUT)/meritous
 
 $(OUT)/meritous: $(OBJS) $(GZOBJS) | $(OUT)
-	$(CC) $(LDFLAGS) -o $@ $^ $(ACSDL)/build/amigaos/libacsdl12.a -lm
+	$(CC) $(LDFLAGS) -o $@ $^ $(ACSDLLIB)/libacsdl12.a $(ACGAMELIB)/libacgame.a -lm
 	cp -r dat $(OUT)/
+	cp AMIGA_PORT.md $(OUT)/ReadMe
+	cp gpl.txt $(OUT)/COPYING
+	cp amiga/icons/meritous.info amiga/icons/ReadMe.info amiga/icons/COPYING.info $(OUT)/
+	cp amiga/icons/Meritous.info $(BUILD)/
 
 $(BUILD)/%.o: src/%.c | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ $<
