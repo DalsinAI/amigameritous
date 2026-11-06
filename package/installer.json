@@ -1,0 +1,13 @@
+{
+  "name": "Meritous",
+  "version": "1.2-amiga1",
+  "drawer": "Meritous",
+  "program": "meritous",
+  "cpu": "68040",
+  "fpu": true,
+  "space": 12000000,
+  "modules": [],
+  "keep": [],
+  "parent": "Work:Games",
+  "badge": "../amiga/icons/art/meritous.png"
+}

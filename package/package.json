@@ -1,0 +1,62 @@
+{
+  "drawer": "Meritous",
+  "drawer_icon": "amiga/icons/Meritous.info",
+  "archive": "meritous-{version}-68040",
+  "members": [
+    {
+      "name": "meritous",
+      "build": "meritous",
+      "check": "executable_sha256"
+    },
+    {
+      "name": "Libs/acgame.library",
+      "build": "acgame.library",
+      "check": "acgame_library_sha256"
+    },
+    {
+      "name": "",
+      "tar": "drawer.tar"
+    }
+  ],
+  "aminet": [
+    [
+      "Short",
+      "Meritous, action-adventure dungeon crawl, 68040+FPU"
+    ],
+    [
+      "Author",
+      "Lancer-X/Asceai; Amiga port: AmiCradle Team"
+    ],
+    [
+      "Uploader",
+      "AmiCradle Team"
+    ],
+    [
+      "Type",
+      "game/actio"
+    ],
+    [
+      "Version",
+      "{version}"
+    ],
+    [
+      "Requires",
+      "AmigaOS 3.x, 68040/68060 with FPU, AGA or RTG, AHI"
+    ],
+    [
+      "Architecture",
+      "m68k-amigaos >= 3.0"
+    ]
+  ],
+  "root": [
+    {
+      "name": "Install-Meritous",
+      "repo": "package/installer/Install-Meritous",
+      "installer": true
+    },
+    {
+      "name": "Install-Meritous.info",
+      "repo": "package/installer/Install-Meritous.info"
+    }
+  ]
+}
