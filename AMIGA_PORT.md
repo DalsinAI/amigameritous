@@ -45,7 +45,7 @@ acsdl12 (amicradle-guest `gameports/acsdl12`, built with its own
 SDL_image and SDL_mixer on AHI; the game links acgame.library's stubs
 (`libacgame.a`). zlib's gz files are built in here for the saved games.
 This gives `build/amigaos/Meritous/` with the program, `dat/`, this ReadMe,
-`COPYING` and their GlowIcons (made from the game's own `dat/i/icon.png`
+`COPYING` and their GlowIcons (made from our own art, `amiga/icons/art/meritous.svg`,
 with AmiCradle's `port_icons.py` from `amiga/icons/icons.json`), and
 `Meritous.info` beside the drawer; run it from that drawer.
 `package/build-amiga.sh` (STOVE and OUT set) makes the release archive
